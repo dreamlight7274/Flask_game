@@ -1,0 +1,14 @@
+from pathlib import Path
+
+DEFAULT_PATH = Path(__file__).resolve()
+# we should get the path of our file: settings, absolute path, so, use resolve,
+
+
+# print(DEFAULT_PATH)
+
+DEBUG = True
+SQLALCHEMY_DATABASE_URI = 'mysql://root:root@localhost/forum'
+
+SQLALCHEMY_COMMIT_ON_TEARDOWN = True
+SQLALCHEMY_TRACK_MODIFICATIONS = True
+# update automatically
