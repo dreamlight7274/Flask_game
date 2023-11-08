@@ -1,6 +1,7 @@
 from pathlib import Path
 
 DEFAULT_PATH = Path(__file__).resolve()
+PROJECT_PATH = Path(__file__).resolve().parent.parent
 # we should get the path of our file: settings, absolute path, so, use resolve,
 
 

@@ -1,8 +1,10 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from Project_public import settings
+from flask_migrate import Migrate
 
 db = SQLAlchemy()
+migrate = Migrate()
 def create_app(test_config=None):
     # create and configure the app
 
@@ -21,6 +23,11 @@ def create_app(test_config=None):
         # if there is no setting.py, use test_config
         app.config.from_mapping(test_config)
     db.init_app(app)
+    migrate.init_app(app, db)
+
+    # flask db init
+    # flask db migrate
+    # flask db upgrade
 
     # try:
     #     os.makedirs(app.instance_path)
