@@ -32,7 +32,7 @@ class Category(db.Model):  # if want to use parent: Category(parent)
         return '<database_Category %r>' % self.category_name
     # If you want to show some information about data inside, use that. for example, you create
     # an object of Category, when you want to "print" this category, it will show the attribute: category_name.
-
+    # print(category)
 
 # relationship table article and classification
 articles_clas = db.Table('articles_clas',
@@ -69,7 +69,15 @@ class Classification(db.Model):
         return '<database_classification %r>' % self.cla_name
 
 
-# flask shell
+
 # flask db init
 # flask db migrate
 # flask db upgrade
+# flask shell
+# from ... import table model
+# from project import db
+# variable = Model_name(attribute1='', attribute2='')
+# db.session.add(variable)
+# db.session.commit()
+# Model_name.query.all()
+# Model_name.query.first()
