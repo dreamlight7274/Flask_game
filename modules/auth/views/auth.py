@@ -2,6 +2,7 @@ from flask import Blueprint, render_template, request, flash, redirect, url_for,
 from ..models import User
 from werkzeug.security import check_password_hash, generate_password_hash
 from Project_public import db
+from ..forms import LoginForm, RegisterForm
 
 
 path_auth = Blueprint('auth', __name__, url_prefix='/auth',
@@ -18,56 +19,73 @@ def user_log_in_status():
 
 @path_auth.route('/login', methods=['GET', 'POST']) # method support
 def login():
-    if request.method == 'POST':
-        print(request.form.get('username'))
-        username = request.form.get('username')
-        password = request.form.get('password')
-        error = None
+    # if request.method == 'POST':
+    #     print(request.form.get('username'))
+    #     username = request.form.get('username')
+    #     password = request.form.get('password')
+    #     error = None
+    #
+    #     user_exist = User.query.filter_by(user_name=username).first()
+    #     if user_exist is None:
+    #         error = 'The user is not exist'
+    #         flash('The user is not exist')
+    #     elif not check_password_hash(user_exist.password, password):
+    #         error = 'Password is not correct'
+    #         flash('The password is not correct')
+    #
+    #     if error is None:
+    #         session.clear()
+    #         session['user_id'] = user_exist.user_id
+    #         return redirect('/')
+    # the approach without form
 
-        user_exist = User.query.filter_by(user_name=username).first()
-        if user_exist is None:
-            error = 'The user is not exist'
-            flash('The user is not exist')
-        elif not check_password_hash(user_exist.password, password):
-            error = 'Password is not correct'
-            flash('The password is not correct')
-
-        if error is None:
-            session.clear()
-            session['user_id'] = user_exist.user_id
-            return redirect('/')
+    form_login = LoginForm()
+    if form_login.validate_on_submit():
+        user = User.query.filter_by(user_name=form_login.username.data).first()
+        session.clear()
+        session['user_id'] = user.user_id
+        return redirect('/')
 
 
 
 
-    return render_template('login.html')
+    return render_template('login.html', form= form_login)
 
 @path_auth.route('/register', methods=['GET', 'POST']) # method support
 def register():
 
-    if request.method == 'POST':
-        username = request.form.get('username')
-        password = request.form.get('password')
-        password_confirm = request.form.get('password_confirm')
-        exit_user = User.query.filter_by(user_name=username).first()
-
-        if password != password_confirm:
-            flash('the two passwords are different')
-            return redirect(url_for('auth.register'))
-
-
-        if exit_user:
-            flash('The username have been used')
-            return redirect(url_for('auth.register'))
-        else:
-            user_insert = User(user_name= username, password=generate_password_hash(password))
-            db.session.add(user_insert)
-            db.session.commit()
-            session.clear()
-            session['user_id'] = user_insert.user_id
+    # if request.method == 'POST':
+    #     username = request.form.get('username')
+    #     password = request.form.get('password')
+    #     password_confirm = request.form.get('password_confirm')
+    #     exit_user = User.query.filter_by(user_name=username).first()
+    #
+    #     if password != password_confirm:
+    #         flash('the two passwords are different')
+    #         return redirect(url_for('auth.register'))
+    #
+    #
+    #     if exit_user:
+    #         flash('The username have been used')
+    #         return redirect(url_for('auth.register'))
+    #     else:
+    #         user_insert = User(user_name= username, password=generate_password_hash(password))
+    #         db.session.add(user_insert)
+    #         db.session.commit()
+    #         session.clear()
+    #         session['user_id'] = user_insert.user_id
+    #     return redirect('/')
+    # approach without form
+    form_register = RegisterForm()
+    if form_register.validate_on_submit():
+        user_insert = User(user_name=form_register.username.data, password=generate_password_hash(form_register.password.data))
+        db.session.add(user_insert)
+        db.session.commit()
+        session.clear()
+        session['user_id'] = user_insert.user_id
         return redirect('/')
 
-    return render_template('register.html')
+    return render_template('register.html', form= form_register)
 @path_auth.route('/logout')
 def logout():
     session.clear()

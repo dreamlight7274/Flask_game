@@ -12,7 +12,6 @@
     <div id="app" style="height:100%;">
         <div class="container is-fluid1" style="height:100%; ">
             <div class="is-block" style="height:100%;">
-                <!-- 导航 -->
                 {% block navbar %}
 <template>
     <b-navbar>
@@ -52,6 +51,7 @@
 {#                    </a>#}
 {#                </div>#}
                {% if g.user %}
+{#                {% if user_id %}#}
                 <div class=" buttons">
 
                     <a class="button is-primary is-light">Welcome {{ g.user['user_name'] }}</a>

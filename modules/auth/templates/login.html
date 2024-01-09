@@ -9,22 +9,53 @@
                     <p class=" subtitle">Login</p>
                     <h1 class="title">Test</h1>
                 </div>
+            {{ form.csrf_token }}
+{#      csrf protect      #}
 
-                {% with messages = get_flashed_messages() %}
+{#                {% with messages = get_flashed_messages() %}#}
+{#                <b-message type="is-danger">#}
+{#                  {% if messages %}#}
+{#                    <ul class=flashes>#}
+{#                    {% for message in messages %}#}
+{#                        <li>{{ message }}</li>#}
+{#                    {% endfor %}#}
+{#                    </ul>#}
+{#                {% endif %}#}
+{#                </b-message>#}
+{#                {% endwith %}#}
+
+                {% if form.username.errors %}
                 <b-message type="is-danger">
-                  {% if messages %}
-                    <ul class=flashes>
-                    {% for message in messages %}
-                        <li>{{ message }}</li>
-                    {% endfor %}
+                    <ul class="errors">
+                        {% for error in form.username.errors %}
+                        <li>
+                            {{ error }}
+                        </li>
+                        {% endfor %}
                     </ul>
-                {% endif %}
+
+
                 </b-message>
-                {% endwith %}
+                {% endif %}
+
+                {% if form.password.errors %}
+                <b-message type="is-danger">
+                    <ul class="errors">
+                        {% for error in form.password.errors %}
+                        <li>
+                            {{ error }}
+                        </li>
+                        {% endfor %}
+                    </ul>
+
+
+                </b-message>
+                {% endif %}
 
                 <div class="field">
                     <p class="control has-icons-left has-icons-right">
-                      <input class="input" type="text" name="username" id="id_username" maxlength="128" placeholder="Username">
+{#                      <input class="input" type="text" name="username" id="id_username" maxlength="128" placeholder="Username">#}
+                        {{ form.username(class='input', placeholder='Username') }}
                       <span class="icon is-small is-left">
                         <i class="fas fa-envelope"></i>
                       </span>
@@ -35,7 +66,8 @@
                   </div>
                   <div class="field">
                     <p class="control has-icons-left">
-                      <input class="input" type="password" name="password" id="id_password" maxlength="320" minlength="6" placeholder="Password">
+{#                      <input class="input" type="password" name="password" id="id_password" maxlength="320" minlength="6" placeholder="Password">#}
+                        {{ form.password(class='input', placeholder='Password') }}
                       <span class="icon is-small is-left">
                         <i class="fas fa-lock"></i>
                       </span>

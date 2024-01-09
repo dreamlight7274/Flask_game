@@ -2,6 +2,7 @@ from datetime import datetime
 from Project_public import db
 from sqlalchemy.dialects.mysql import LONGTEXT
 from enum import IntEnum
+from ..auth.models import User
 # class parent(db.Model):
 #     __abstract__ = True
 
@@ -50,6 +51,8 @@ class Article(db.Model):
     public_date = db.Column(db.DateTime, default=datetime.utcnow(), nullable=False)
     update_date = db.Column(db.DateTime, default=datetime.utcnow(), onupdate=datetime.utcnow(), nullable=True)
     category_id = db.Column(db.Integer, db.ForeignKey('category.category_id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.user_id'), nullable=False)
+    # user
 
     # foreign key from Category
     classifications = db.relationship('Classification', secondary=articles_clas, lazy='subquery',
