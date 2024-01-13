@@ -38,13 +38,17 @@ def create_app(test_config=None):
     from modules.forum.views import path_forum
     from modules.auth import views as auth_views
     from modules.forum.views import index
+    from modules.admin import views as admin_views
+
     from modules.forum import models
     from modules.auth import models
 
 
 
+
     app.register_blueprint(path_forum)
     app.register_blueprint(auth_views.path_auth)
+    app.register_blueprint(admin_views.path_admin)
     # add another rule for index, the path is not so good with forum here
     app.add_url_rule('/', endpoint='index', view_func=index) # don't add "()"
 
