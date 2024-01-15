@@ -1,0 +1,41 @@
+{% extends 'admin/index.html' %}
+{% block res_list %}
+    <div class="is-block">
+        <div class="is-pulled-left">
+            <h1 class="is-size-4">
+                <span class="icon">
+                    <i class="mdi mdi-receipt-outline"></i>
+                </span>
+                Category management
+            </h1>
+
+        </div>
+    {% block button %}
+        <div class="is-pulled-right">
+            <a href="" class="button is-primary is-light">
+                <span class="icon"><i class="mdi mdi-plus-thick"></i></span>
+                <span>add a category</span>
+            </a>
+        </div>
+    {% endblock button %}
+        <div class="is-clearfix"></div>
+        <div class="dropdown-divider"></div>
+
+                {% with messages = get_flashed_messages() %}
+                <b-message type="is-success">
+                  {% if messages %}
+                    <ul class=flashes>
+                    {% for message in messages %}
+                        <li>{{ message }}</li>
+                    {% endfor %}
+                    </ul>
+                {% endif %}
+                </b-message>
+                {% endwith %}
+
+    </div>
+    {% block table_content %}
+
+    {% endblock table_content %}
+
+{% endblock res_list %}
