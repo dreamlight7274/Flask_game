@@ -12,7 +12,7 @@
         </div>
     {% block button %}
         <div class="is-pulled-right">
-            <a href="" class="button is-primary is-light">
+            <a href="{{ url_for('admin.add_new_category') }}" class="button is-primary is-light">
                 <span class="icon"><i class="mdi mdi-plus-thick"></i></span>
                 <span>add a category</span>
             </a>
@@ -35,7 +35,73 @@
 
     </div>
     {% block table_content %}
+<div class="table-container">
+    <table class="table is-fullwidth is-hoverable is-striped">
+        <thead>
+            <tr>
+              <th>ID</th>
+              <th>Category name</th>
+              <th>Category slug</th>
+              <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
 
+            {% for category in categories %}
+            <tr>
+                <td>{{ category.category_id }}</td>
+                <td>{{ category.category_name }}</td>
+                <td>{{ category.category_slug }}</td>
+
+                <td>
+                    <div class="tags">
+                        <a href="{{ url_for('admin.edit_category', cat_id=category.category_id) }}" class="tag is-success is-light">
+                            <span class="icon">
+                                <i class="mdi mdi-square-edit-outline"></i>
+                            </span>
+                            Edit
+                        </a>
+                        <a href="{{ url_for('admin.delete_category', cat_id = category.category_id) }}" class="tag is-danger is-light">
+                            <span class="icon">
+                                <i class="mdi mdi-trash-can-outline"></i>
+                            </span>
+                            Delete
+                        </a>
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<nav class="pagination is-small" role="navigation" aria-label="pagination">
+    {% if pagination.has_prev %}
+    <a href="{{ url_for('admin.category_manage_page') }}?page={{ pagination.prev_num }}" class="pagination-previous" title="This is the first page">Previous</a>
+    {% endif %}
+    {% if pagination.has_next %}
+    <a href="{{ url_for('admin.category_manage_page') }}?page={{ pagination.next_num }}" class="pagination-next">Next page</a>
+    {% endif %}
+
+    <ul class="pagination-list">
+        {% for page in pagination.iter_pages() %}
+            {% if page %}
+                {% if page != pagination.page %}
+                <li>
+                    <a href="{{ url_for('admin.category_manage_page') }}?page={{ page }}" class="pagination-link" aria-label="Page 1" aria-current="page">{{ page }}</a>
+                </li>
+                {% else %}
+                <li>
+                    <a class="pagination-link is-current" aria-label="Page 1" aria-current="page">{{ page }}</a>
+                </li>
+                {% endif %}
+            {% else %}
+                <span class=pagination-ellipsis>&hellip;</span>
+            {% endif %}
+        {% endfor %}
+
+    </ul>
+</nav>
     {% endblock table_content %}
 
 {% endblock res_list %}

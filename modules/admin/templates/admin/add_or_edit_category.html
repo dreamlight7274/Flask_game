@@ -1,0 +1,33 @@
+{% extends 'admin/category.html' %}
+
+{% block button %}{% endblock button %}
+
+
+{% block table_content %}
+    <form action="" method="post" class="mt-4">
+        {{ form.csrf_token }}
+        <div class="field">
+            {{ form.name.label(class='label') }}
+{#      the label      #}
+            <div class="control">
+                {{ form.name(class='input', placeholder='category name') }}
+            </div>
+        </div>
+        <div class="field">
+            {{ form.slug.label(class='label') }}
+            <div class="control">
+                {{ form.slug(class='input', placeholder='category slug') }}
+            </div>
+        </div>
+        <div class="is-block">
+            <div class="box has-background-light is-shadowless level">
+                <a href="" class=" is-danger button level-left">Delete</a>
+                <div class="level-right">
+                    <a href="{{ url_for('admin.category_manage_page') }}" class="button is-primary is-light mr-2">back</a>
+                    <input type="submit" value="save" class=" button is-success">
+                </div>
+            </div>
+        </div>
+
+    </form>
+{% endblock table_content %}
