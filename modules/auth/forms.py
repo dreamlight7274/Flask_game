@@ -5,6 +5,7 @@ from wtforms.validators import DataRequired, Length, ValidationError, EqualTo
 from werkzeug.security import check_password_hash
 from .models import User
 
+
 class LoginForm(FlaskForm):
     def username_log(username):
         user_input = f'the user log in is  {username}'
@@ -47,4 +48,7 @@ class RegisterForm(FlaskForm):
         if user is not None:
             error = 'the user is exist.'
             raise  ValidationError(error)
+
+
+
 

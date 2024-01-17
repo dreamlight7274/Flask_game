@@ -1,7 +1,9 @@
-from flask import Blueprint, render_template, request, flash, redirect, url_for
+from flask import Blueprint, render_template, request, flash, redirect, url_for, g
 from ..auth.views.auth import login_request_update
 from ..forum.models import Category
-from ..admin.forms import Category_form
+from ..forum.models import Article, Classification
+from ..admin.forms import Category_form, Article_form
+
 from Project_public import db
 
 path_admin = Blueprint('admin', __name__, url_prefix='/admin',
@@ -58,4 +60,36 @@ def delete_category(cat_id):
         flash(f'Category {category_using.category_name} has been deleted')
         return redirect(url_for('admin.category_manage_page'))
 
+@path_admin.route('/article')
+@login_request_update
+def article_manage_page():
+    page = request.args.get('page', 1, type=int)
+    pagination = Article.query.order_by(Article.article_id).paginate(page=page, per_page=2, error_out=False)
+    articles_show = pagination.items
+    return render_template('admin/article.html', articles=articles_show, pagination=pagination)
+
+@path_admin.route('/article/add', methods=['GET','POST'])
+@login_request_update
+def add_new_article():
+    form_using = Article_form()
+    form_using.category.choices = [(category.category_id, category.category_name) for category in Category.query.all()]
+    form_using.classifications.choices = [(cla.cla_id, cla.cla_name) for cla in Classification.query.all()]
+
+    if form_using.validate_on_submit():
+        article_creating = Article(
+            article_name=form_using.name.data,
+            excerpt=form_using.excerpt.data,
+            article_status=form_using.status.data,
+            category_id=int(form_using.category.data),
+            content=form_using.content.data,
+            user_id=g.user.user_id
+
+
+        )
+        article_creating.classifications = [Classification.query.get(cla_id) for cla_id in form_using.classifications.data]
+        db.session.add(article_creating)
+        db.session.commit()
+        flash(f'Article {form_using.name.data} has been created')
+        return redirect(url_for('admin.article_manage_page'))
+    return render_template('admin/add_or_edit_article.html',form= form_using)
 
