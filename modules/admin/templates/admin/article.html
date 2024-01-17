@@ -12,7 +12,7 @@
     </div>
     {% block button %}
     <div class="is-pulled-right">
-        <a href="" class=" button is-primary is-light">
+        <a href="{{ url_for('admin.add_new_article') }}" class=" button is-primary is-light">
             <span class="icon"><i class="mdi mdi-plus-thick"></i></span>
             <span>Add a new article</span>
         </a>
@@ -55,18 +55,18 @@
                 <td>{{ article.article_id }}</td>
                 <td>{{ article.article_name }}</td>
                 <td>{{ article.excerpt }}</td>
-                <td>{{ article.category.name }}</td>
+                <td>{{ article.category.category_name }}</td>
                 <td>{{ article.classifications|join(',') }} </td>
                 <td>{{ article.public_date }}</td>
                 <td>
                     <div class="tags">
-                        <a href="" class="tag is-success is-light">
+                        <a href="{{ url_for('admin.edit_article', article_id = article.article_id) }}" class="tag is-success is-light">
                             <span class="icon">
                                 <i class="mdi mdi-square-edit-outline"></i>
                             </span>
                             Edit
                         </a>
-                        <a href="" class="tag is-danger is-light">
+                        <a href="{{ url_for('admin.delete_article', article_id=article.article_id) }}" class="tag is-danger is-light">
                             <span class="icon">
                                 <i class="mdi mdi-trash-can-outline"></i>
                             </span>

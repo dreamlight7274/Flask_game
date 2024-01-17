@@ -93,3 +93,47 @@ def add_new_article():
         return redirect(url_for('admin.article_manage_page'))
     return render_template('admin/add_or_edit_article.html',form= form_using)
 
+@path_admin.route('/article/edit/<int:article_id>', methods=['GET','POST'])
+@login_request_update
+def edit_article(article_id):
+    article_using = Article.query.get(article_id)
+    classifications_using = [cla.cla_id for cla in article_using.classifications]
+    form_using = Article_form(
+        name=article_using.article_name,
+        excerpt=article_using.excerpt,
+        status=article_using.article_status,
+        category=article_using.category.category_id,
+        content=article_using.content,
+        classifications=classifications_using,
+        user_id=g.user.user_id,
+
+
+    )
+
+    form_using.category.choices = [(category.category_id, category.category_name) for category in Category.query.all()]
+    form_using.classifications.choices = [(cla.cla_id, cla.cla_name) for cla in Classification.query.all()]
+    if form_using.validate_on_submit():
+        article_using.article_name = form_using.name.data
+        article_using.excerpt = form_using.excerpt.data
+        article_using.article_status = form_using.status.data
+        article_using.category_id = int(form_using.category.data)
+        article_using.content = form_using.content.data
+        article_using.user_id = g.user.user_id
+        article_using.classifications = [Classification.query.get(cla_id) for cla_id in form_using.classifications.data]
+        db.session.add(article_using)
+        db.session.commit()
+        flash(f'Article {form_using.name.data} has been edited')
+        return redirect(url_for('admin.article_manage_page'))
+
+
+    return render_template('admin/add_or_edit_article.html', form=form_using)
+
+@path_admin.route('/article/delete/<int:article_id>', methods=['GET','POST'])
+@login_request_update
+def delete_article(article_id):
+    article_using = Article.query.get(article_id)
+    if article_using:
+        db.session.delete(article_using)
+        db.session.commit()
+        flash(f'the article {article_using.article_name} has been deleted')
+        return redirect(url_for('admin.article_manage_page'))
