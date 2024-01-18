@@ -1,0 +1,26 @@
+{% extends 'admin/cla.html' %}
+
+{% block button %}{% endblock button %}
+
+
+{% block table_content %}
+    <form action="" method="post" class="mt-4">
+        {{ form.csrf_token }}
+        <div class="field">
+            {{ form.name.label(class='label') }}
+            <div class="control">
+                {{ form.name(class='input', placeholder='classification_name') }}
+            </div>
+        </div>
+
+        <div class="is-block">
+            <div class="box has-background-light is-shadowless level">
+
+                <div class="level-right">
+                    <a href="{{ url_for('admin.classification_manage_page') }}" class="button is-primary is-light mr-2">Back</a>
+                    <input type="submit" value="save" class=" button is-success">
+                </div>
+            </div>
+        </div>
+    </form>
+{% endblock table_content %}

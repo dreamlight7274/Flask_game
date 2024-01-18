@@ -2,7 +2,8 @@ from flask import Blueprint, render_template, request, flash, redirect, url_for,
 from ..auth.views.auth import login_request_update
 from ..forum.models import Category
 from ..forum.models import Article, Classification
-from ..admin.forms import Category_form, Article_form
+from ..auth.models import User
+from ..admin.forms import Category_form, Article_form, Classification_form
 
 from Project_public import db
 
@@ -137,3 +138,61 @@ def delete_article(article_id):
         db.session.commit()
         flash(f'the article {article_using.article_name} has been deleted')
         return redirect(url_for('admin.article_manage_page'))
+
+@path_admin.route('/class')
+@login_request_update
+def classification_manage_page():
+    page = request.args.get('page', 1, type=int)
+    pagination=Classification.query.order_by(Classification.cla_id).paginate(page=page, per_page=20, error_out=False)
+    class_showing = pagination.items
+    return render_template('admin/cla.html', classifications=class_showing, pagination=pagination)
+
+
+@path_admin.route('/class/add', methods=['GET','POST'])
+@login_request_update
+def add_new_classification():
+    form_using = Classification_form()
+    if form_using.validate_on_submit():
+        classification_creating = Classification(cla_name=form_using.name.data)
+        db.session.add(classification_creating)
+        db.session.commit()
+        flash(f'classification {form_using.name.data} has been added')
+        return redirect(url_for('admin.classification_manage_page'))
+    return render_template('admin/add_or_edit_cla.html', form=form_using)
+
+@path_admin.route('class/edit/<int:cla_id>', methods=['GET','POST'])
+@login_request_update
+def edit_classification(cla_id):
+    classification_using = Classification.query.get(cla_id)
+    form_using = Classification_form(name=classification_using.cla_name)
+    if form_using.validate_on_submit():
+        classification_using.cla_name = form_using.name.data
+        db.session.add(classification_using)
+        db.session.commit()
+        flash(f'classification {form_using.name.data} has been edited')
+        return redirect(url_for('admin.classification_manage_page'))
+    return render_template('admin/add_or_edit_cla.html', form=form_using)
+
+@path_admin.route('class/delete/<int:cla_id>', methods=['GET','POST'])
+@login_request_update
+def delete_classification(cla_id):
+    classification_using=Classification.query.get(cla_id)
+    if classification_using:
+        db.session.delete(classification_using)
+        db.session.commit()
+        flash(f'classification {classification_using.cla_name} has been deleted')
+        return redirect(url_for('admin.classification_manage_page'))
+
+@path_admin.route('/user')
+@login_request_update
+def user_manage_page():
+    page=request.args.get('page', 1, type=int)
+    pagination = User.query.order_by(User.user_id).paginate(page=page, per_page=20, error_out=False)
+    users_showing = pagination.items
+    return render_template('admin/user.html', users=users_showing, pagination=pagination)
+
+
+
+
+
+

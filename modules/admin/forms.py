@@ -32,3 +32,9 @@ class Article_form(FlaskForm):
         DataRequired(message="Please input the content of article")
     ])
     classifications = SelectMultipleField('classifications', choices=None, coerce=int)
+
+class Classification_form(FlaskForm):
+    name = StringField('name', validators=[
+        DataRequired(message="please input the name of classification"),
+        Length(max=50, message="The length of the name should be less than 50 words")
+    ])
