@@ -25,19 +25,19 @@
             </b-navbar-item>
         </template>
         <template #start>
-            <b-navbar-item href="#">
+            <b-navbar-item href="/">
                 Home
             </b-navbar-item>
             <b-navbar-item href="#">
                 Documentation
             </b-navbar-item>
             <b-navbar-dropdown label="Info">
+                {% for cat in categories %}
                 <b-navbar-item href="#">
-                    About
+                    {{ cat.category_name }}
                 </b-navbar-item>
-                <b-navbar-item href="#">
-                    Contact
-                </b-navbar-item>
+
+                {% endfor %}
             </b-navbar-dropdown>
         </template>
 

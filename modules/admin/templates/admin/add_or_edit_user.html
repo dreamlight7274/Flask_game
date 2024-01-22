@@ -1,0 +1,74 @@
+{% extends 'admin/user.html' %}
+
+{% block button %}{% endblock button %}
+
+
+{% block table_content %}
+    <form action="" method="post" class="mt-4" enctype="multipart/form-data">
+        {{ form.csrf_token }}
+        <div class="field">
+            {{ form.username.label(class='label') }}
+            <div class="control">
+                {{ form.username(class='input', placeholder='username') }}
+            </div>
+        </div>
+        <div class="field">
+            {{ form.password.label(class='label') }}
+            <div class="control">
+                {{ form.password(class='input', placeholder='password') }}
+                <p class="help has-text-grey-light">
+                    {{ form.password.description }}
+                </p>
+            </div>
+        </div>
+        <div class="field">
+            {{ form.portrait.label(class='label') }}
+            <div class="control">
+                {{ form.portrait(class='input',  placeholder='head_portrait') }}
+                <p class="help has-text-grey-light">
+                    {{ form.portrait.description }}
+                </p>
+            </div>
+
+<div class="mb-2">
+{#            {% if form.portrait %}#}
+{#                <img height="100" width="100" src="/admin/static/{{ form.portrait.data }}" alt="portrait">#}
+{#                #}
+{#            {% else %}#}
+{#                    -_-#}
+{#            {% endif %}#}
+
+            {% if key=="edit" %}
+                {% if user.head_00portrait %}
+<img height="100" width="100" src="/admin/static/{{ user.head_portrait }}" alt="{{ user.user_name }}">
+                {% else %}
+                    -_-
+                {% endif %}
+            {% endif %}
+</div>
+        </div>
+
+        <div class="field">
+            <label class="checkbox">
+                {{ form.is_VIP }}
+                {{ form.is_VIP.label }}
+            </label>
+        </div>
+        <div class="field">
+            <label class="checkbox">
+                {{ form.is_admin }}
+                {{ form.is_admin.label }}
+            </label>
+        </div>
+
+        <div class="is-block">
+            <div class="box has-background-light is-shadowless level">
+                <button class=" is-danger button level-left">Delete</button>
+                <div class="level-right">
+                    <a href="{{ url_for('admin.user_manage_page') }}" class="button is-primary is-light mr-2">back</a>
+                    <input type="submit" value="save" class=" button is-success">
+                </div>
+            </div>
+        </div>
+    </form>
+{% endblock table_content %} 

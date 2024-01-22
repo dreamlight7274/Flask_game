@@ -1,9 +1,11 @@
 from flask import Blueprint, render_template, request, flash, redirect, url_for, g
+from werkzeug.security import generate_password_hash, check_password_hash
+from .utils import upload_file
 from ..auth.views.auth import login_request_update
 from ..forum.models import Category
 from ..forum.models import Article, Classification
 from ..auth.models import User
-from ..admin.forms import Category_form, Article_form, Classification_form
+from ..admin.forms import Category_form, Article_form, Classification_form, User_form, User_edit_form
 
 from Project_public import db
 
@@ -191,8 +193,77 @@ def user_manage_page():
     users_showing = pagination.items
     return render_template('admin/user.html', users=users_showing, pagination=pagination)
 
+@path_admin.route('/user/add', methods=['GET','POST'])
+@login_request_update
+def add_new_user():
+    form_using = User_form()
 
+    if form_using.validate_on_submit():
+        file = form_using.portrait.data
+        portrait_path, portrait_name = upload_file('portrait', file)
+        file.save(portrait_path)
+        user_creating = User(
+            user_name=form_using.username.data,
+            password=generate_password_hash(form_using.password.data),
+            head_portrait=f'portrait/{portrait_name}',
+            is_VIP=form_using.is_VIP.data,
+            is_admin=form_using.is_admin.data
+        )
+        db.session.add(user_creating)
+        db.session.commit()
+        flash(f'User {form_using.username.data} has been created')
+        return redirect(url_for('admin.user_manage_page'))
 
+    return render_template('admin/add_or_edit_user.html', form=form_using, key="create")
 
+@path_admin.route('/user/edit/<int:user_id>', methods=['GET','POST'])
+@login_request_update
+def edit_user(user_id):
+    user_using = User.query.get(user_id)
+    print("h1")
+    form_using = User_edit_form(
+        username=user_using.user_name,
+        password=user_using.password,
+        portrait=user_using.head_portrait,
+        is_VIP=user_using.is_VIP,
+        is_admin=user_using.is_admin
+    )
+    print("h1")
+    print(form_using.portrait.data)
+    if form_using.validate_on_submit():
+        print("h1")
+        user_using.user_name = form_using.username.data
+        if not form_using.password.data:
+            print("here pass not")
+            user_using.password = user_using.password
+        else:
+            print("pass have")
+            user_using.password = generate_password_hash(form_using.password.data)
 
+        file_update = form_using.portrait.data
+        if user_using.head_portrait == file_update:
+            print("por no change")
+            user_using.head_portrait = user_using.head_portrait
+        else:
+            print("pass change")
+            portrait_path, portrait_name = upload_file('portrait', file_update)
+            file_update.save(portrait_path)
+            user_using.head_portrait = f'portrait/{portrait_name}'
+        user_using.is_VIP = form_using.is_VIP.data
+        user_using.is_admin = form_using.is_admin.data
+        db.session.add(user_using)
+        db.session.commit()
+        flash(f'The data of User{form_using.username.data} has been changed')
+        return redirect(url_for('admin.user_manage_page'))
 
+    return render_template('admin/add_or_edit_user.html', form=form_using, user=user_using, key="edit")
+
+@path_admin.route('/user/delete/<int:user_id>', methods=['GET','POST'])
+@login_request_update
+def delete_user(user_id):
+    user_using = User.query.get(user_id)
+    if user_using:
+        db.session.delete(user_using)
+        db.session.commit()
+        flash(f'User {user_using.user_name} has been deleted')
+        return redirect(url_for('admin.user_manage_page'))

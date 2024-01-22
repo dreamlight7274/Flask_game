@@ -51,12 +51,21 @@ def create_app(test_config=None):
     app.register_blueprint(admin_views.path_admin)
     # add another rule for index, the path is not so good with forum here
     app.add_url_rule('/', endpoint='index', view_func=index) # don't add "()"
+    app.context_processor(inject_categories)
 
 
     return app
-
     # app = Flask(__name__)
     # @app.route('/')
     # def hello_world():  # put application's code here
     #     return 'Hello World!'
+
+def inject_categories():
+    from modules.forum.models import Category
+    categories = Category.query.all()
+    return dict(categories=categories)
+# always we need categories, so we return it to all the templates
+
+
+
 
