@@ -1,6 +1,7 @@
 from datetime import datetime
 from Project_public import db
-from modules.forum.models import Article
+# from modules.forum.models import Article
+# sometimes bug
 
 class User(db.Model):
 

@@ -33,7 +33,7 @@
             </b-navbar-item>
             <b-navbar-dropdown label="Info">
                 {% for cat in categories %}
-                <b-navbar-item href="#">
+                <b-navbar-item href="{{ url_for('forum.articles_with_category', cat_id=cat.category_id) }}">
                     {{ cat.category_name }}
                 </b-navbar-item>
 

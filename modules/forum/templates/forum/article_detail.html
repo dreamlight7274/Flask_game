@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    {{ article.article_name }}
+{% endblock title %}
+{% block main %}
+{% block breadcrumb %}
+    <nav class="breadcrumb is-small" aria-label="breadcrumbs">
+        <ul>
+            <li><a href="/">Main page</a></li>
+            <li><a href="{{ url_for('forum.articles_with_category', cat_id=category.category_id) }}">{{ category.category_name }}</a></li>
+            <li class="is-active"><a href="#" aria-current="page">{{ article.article_name }}</a></li>
+        </ul>
+    </nav>
+{% endblock breadcrumb %}
+
+{% block article_detail %}
+<div class="pl-2">
+    <h1 class="is-size-3">
+        {{ article.article_name }}
+    </h1>
+    <p class="has-text-grey-light is-size-6 mt-1">
+        <span class="icon"><i class="mdi mdi-clipboard-text-clock-outline"></i></span>{{ article.public_date }}
+        <span class="icon"><i class="mdi mdi-shape-outline"></i></span>{{ article.category.category_name }}
+        <span class="icon"><i class="mdi mdi-account"></i></span>{{ user.user_name }}
+        <span class="icon"><i class="mdi mdi-tag-heart-outline"></i></span>{{ article.classifications|join(',') }}
+    </p>
+    <div class="content has-text-grey mt-1">{{ article.content|safe }}</div>
+</div>
+
+<hr>
+
+{% endblock article_detail %}
+{% endblock main %}

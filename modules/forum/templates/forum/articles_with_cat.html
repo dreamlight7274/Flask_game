@@ -48,10 +48,10 @@
 {#                    </nav>#}
     <nav class="pagination is-small" role="navigation" aria-label="pagination">
     {% if pagination.has_prev %}
-    <a href="/?page={{ pagination.prev_num }}" class="pagination-previous" title="This is the first page">Previous</a>
+    <a href="/modules/forum/static?page={{ pagination.prev_num }}" class="pagination-previous" title="This is the first page">Previous</a>
     {% endif %}
     {% if pagination.has_next %}
-    <a href="/?page={{ pagination.next_num }}" class="pagination-next">Next page</a>
+    <a href="/modules/forum/static?page={{ pagination.next_num }}" class="pagination-next">Next page</a>
     {% endif %}
 
     <ul class="pagination-list">
@@ -59,7 +59,7 @@
             {% if page %}
                 {% if page != pagination.page %}
                 <li>
-                    <a href="/?page={{ page }}" class="pagination-link" aria-label="Page 1" aria-current="page">{{ page }}</a>
+                    <a href="/modules/forum/static?page={{ page }}" class="pagination-link" aria-label="Page 1" aria-current="page">{{ page }}</a>
                 </li>
                 {% else %}
                 <li>
