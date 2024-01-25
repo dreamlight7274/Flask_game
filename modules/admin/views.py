@@ -71,6 +71,16 @@ def article_manage_page():
     articles_show = pagination.items
     return render_template('admin/article.html', articles=articles_show, pagination=pagination)
 
+@path_admin.route('article/date/<string:date>')
+@login_request_update
+def article_with_date_manage_page(date):
+    import re
+#     use to devide the string
+
+
+
+
+
 @path_admin.route('/article/add', methods=['GET','POST'])
 @login_request_update
 def add_new_article():
@@ -267,3 +277,12 @@ def delete_user(user_id):
         db.session.commit()
         flash(f'User {user_using.user_name} has been deleted')
         return redirect(url_for('admin.user_manage_page'))
+
+@path_admin.context_processor
+def dates_classification():
+    articles_using = Article.query.order_by(Article.public_date)
+    dates = set([article.public_date.strftime("%m_%Y") for article in articles_using])
+
+    return dict(dates=dates)
+
+

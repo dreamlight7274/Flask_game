@@ -31,7 +31,11 @@
             <b-navbar-item href="#">
                 Documentation
             </b-navbar-item>
-            <b-navbar-dropdown label="Info">
+            {% if '/forum/category' in request.path%}
+            <b-navbar-dropdown label="{{ category.category_name }}">
+            {% else %}
+            <b-navbar-dropdown label="Category">
+            {% endif %}
                 {% for cat in categories %}
                 <b-navbar-item href="{{ url_for('forum.articles_with_category', cat_id=cat.category_id) }}">
                     {{ cat.category_name }}

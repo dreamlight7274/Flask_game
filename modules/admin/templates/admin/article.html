@@ -10,6 +10,7 @@
             Article management
         </h1>
     </div>
+
     {% block button %}
     <div class="is-pulled-right">
         <a href="{{ url_for('admin.add_new_article') }}" class=" button is-primary is-light">
@@ -18,6 +19,26 @@
         </a>
     </div>
     {% endblock button %}
+
+    <div class="is-clearfix"></div>
+    <div class=" dropdown-divider"></div>
+    {% block collection %}
+        <div>
+            {% if '/admin/article/date' in request.path%}
+            <b-navbar-dropdown label="{{ request.args['date'] }}">
+            {% else %}
+            <b-navbar-dropdown label="Date">
+            {% endif %}
+                {% for cat in categories %}
+                <b-navbar-item href="{{ url_for('forum.articles_with_category', cat_id=cat.category_id) }}">
+                    {{ cat.category_name }}
+                </b-navbar-item>
+
+                {% endfor %}
+            </b-navbar-dropdown>
+        </div>
+    {% endblock collection %}
+
     <div class="is-clearfix"></div>
     <div class=" dropdown-divider"></div>
 
@@ -80,7 +101,7 @@
         </tbody>
     </table>
 </div>
-
+{% block pagination %}
 <nav class="pagination is-small" role="navigation" aria-label="pagination">
     {% if pagination.has_prev %}
     <a href="{{ url_for('admin.article_manage_page') }}?page={{ pagination.prev_num }}" class="pagination-previous" title="This is the first page">Previous</a>
@@ -108,5 +129,7 @@
 
     </ul>
 </nav>
+
+{% endblock %}
 {% endblock table_content %}
 {% endblock res_list %}
