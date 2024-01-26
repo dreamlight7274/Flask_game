@@ -76,6 +76,23 @@ def article_manage_page():
 def article_with_date_manage_page(date):
     import re
 #     use to devide the string
+    date_rule = re.compile(r'\d{4}|\d{2}')
+    # 2-digit number and 4-digit number
+    dates = date_rule.findall(date)
+    print(dates)
+    from sqlalchemy import extract, and_
+    page=request.args.get('page', 1, type=int)
+    articles_using = Article.query.filter(
+        and_(
+            extract('year', Article.public_date) == int(dates[1]),
+            extract('month', Article.public_date) == int(dates[0])
+        )
+    )
+    pagination = articles_using.paginate(page=page, per_page=2, error_out=False)
+    return render_template('/admin/article_with_date.html', articles=pagination.items, pagination=pagination, date=date)
+
+
+
 
 
 

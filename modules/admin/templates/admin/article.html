@@ -25,13 +25,13 @@
     {% block collection %}
         <div>
             {% if '/admin/article/date' in request.path%}
-            <b-navbar-dropdown label="{{ request.args['date'] }}">
+            <b-navbar-dropdown label="{{ date }}">
             {% else %}
             <b-navbar-dropdown label="Date">
             {% endif %}
-                {% for cat in categories %}
-                <b-navbar-item href="{{ url_for('forum.articles_with_category', cat_id=cat.category_id) }}">
-                    {{ cat.category_name }}
+                {% for date in dates %}
+                <b-navbar-item href="{{ url_for('admin.article_with_date_manage_page', date=date) }}">
+                    {{ date }}
                 </b-navbar-item>
 
                 {% endfor %}
