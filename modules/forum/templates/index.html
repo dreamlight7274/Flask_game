@@ -1,5 +1,23 @@
 {% extends 'base.html' %}
-
+                {% block search %}
+                    <div class="box is-shadowless" style="border:solid 1px #eee ;">
+                        <h1 class="is-size-6 icon-text">
+                            <span class="icon"><i class="mdi mdi-search-web"></i></span>
+                            Search
+                        </h1>
+                        <div class=" dropdown-divider"></div>
+                        <form action="{{ url_for('forum.search') }}" method="get">
+                            <div class="field has-addons">
+                                <div class="control">
+                                <input class="input" type="search" value="{{ words }}" name="words" placeholder="Please input something about the article you wan to find">
+                                </div>
+                                <div class="control">
+                                <input type="submit" value="Search" class="button is-info">
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                {% endblock search %}
                 {% block main %}
                 <div class="box is-marginless is-shadowless is-radiusless">
                     <div class="columns is-multiline">

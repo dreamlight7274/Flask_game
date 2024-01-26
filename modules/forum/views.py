@@ -37,5 +37,41 @@ def article_detail(cat_id, article_id):
     return render_template('forum/article_detail.html', category=category_using, article=article_using, user=user_using,
                            previous_one=previous_one, next_one=next_one)
 
+@path_forum.route('/search')
+def search():
+    words = request.args.get('words')
+    page = request.args.get('page', 1, type=int)
+    pagination = Article.query.filter(Article.article_name.like("%"+words+"%")).paginate(page=page, per_page=2, error_out=False)
+    articles_using = pagination.items
+    return render_template('index.html', words=words, articles=articles_using, pagination=pagination)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
