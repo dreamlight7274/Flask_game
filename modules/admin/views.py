@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, request, flash, redirect, url_for, g
 from werkzeug.security import generate_password_hash, check_password_hash
 from .utils import upload_file
-from ..auth.views.auth import login_request_update
+from ..auth.views.auth import admin_request
 from ..forum.models import Category
 from ..forum.models import Article, Classification
 from ..auth.models import User
@@ -13,12 +13,12 @@ path_admin = Blueprint('admin', __name__, url_prefix='/admin',
                        static_folder='static', template_folder='templates')
 
 @path_admin.route('/')
-@login_request_update
+@admin_request
 def index():
     return render_template('admin/index.html')
 
 @path_admin.route('/category')
-@login_request_update
+@admin_request
 def category_manage_page():
     page = request.args.get('page', 1, type=int)
     # categories = Category.query.order_by(Category.category_id).all()
@@ -28,7 +28,7 @@ def category_manage_page():
     return render_template('admin/category.html', categories=categories_show, pagination=pagination)
 
 @path_admin.route('/category/add', methods=['GET','POST'])
-@login_request_update
+@admin_request
 def add_new_category():
     form_using = Category_form()
     if form_using.validate_on_submit():
@@ -40,7 +40,7 @@ def add_new_category():
     return render_template('admin/add_or_edit_category.html', form=form_using)
 
 @path_admin.route('/category/edit/<int:cat_id>', methods=['GET','POST'])
-@login_request_update
+@admin_request
 def edit_category(cat_id):
     category_using = Category.query.get(cat_id)
     form_using = Category_form(name=category_using.category_name, slug=category_using.category_slug)
@@ -54,7 +54,7 @@ def edit_category(cat_id):
     return render_template('admin/add_or_edit_category.html', form=form_using)
 
 @path_admin.route('/category/delete/<int:cat_id>', methods=['GET','POST'])
-@login_request_update
+@admin_request
 def delete_category(cat_id):
     category_using = Category.query.get(cat_id)
     if category_using:
@@ -64,7 +64,7 @@ def delete_category(cat_id):
         return redirect(url_for('admin.category_manage_page'))
 
 @path_admin.route('/article')
-@login_request_update
+@admin_request
 def article_manage_page():
     page = request.args.get('page', 1, type=int)
     pagination = Article.query.order_by(Article.article_id).paginate(page=page, per_page=2, error_out=False)
@@ -72,7 +72,7 @@ def article_manage_page():
     return render_template('admin/article.html', articles=articles_show, pagination=pagination)
 
 @path_admin.route('article/date/<string:date>')
-@login_request_update
+@admin_request
 def article_with_date_manage_page(date):
     import re
 #     use to devide the string
@@ -99,7 +99,7 @@ def article_with_date_manage_page(date):
 
 
 @path_admin.route('/article/add', methods=['GET','POST'])
-@login_request_update
+@admin_request
 def add_new_article():
     form_using = Article_form()
     form_using.category.choices = [(category.category_id, category.category_name) for category in Category.query.all()]
@@ -124,7 +124,7 @@ def add_new_article():
     return render_template('admin/add_or_edit_article.html',form= form_using)
 
 @path_admin.route('/article/edit/<int:article_id>', methods=['GET','POST'])
-@login_request_update
+@admin_request
 def edit_article(article_id):
     article_using = Article.query.get(article_id)
     classifications_using = [cla.cla_id for cla in article_using.classifications]
@@ -159,7 +159,7 @@ def edit_article(article_id):
     return render_template('admin/add_or_edit_article.html', form=form_using)
 
 @path_admin.route('/article/delete/<int:article_id>', methods=['GET','POST'])
-@login_request_update
+@admin_request
 def delete_article(article_id):
     article_using = Article.query.get(article_id)
     if article_using:
@@ -169,7 +169,7 @@ def delete_article(article_id):
         return redirect(url_for('admin.article_manage_page'))
 
 @path_admin.route('/class')
-@login_request_update
+@admin_request
 def classification_manage_page():
     page = request.args.get('page', 1, type=int)
     pagination=Classification.query.order_by(Classification.cla_id).paginate(page=page, per_page=20, error_out=False)
@@ -178,7 +178,7 @@ def classification_manage_page():
 
 
 @path_admin.route('/class/add', methods=['GET','POST'])
-@login_request_update
+@admin_request
 def add_new_classification():
     form_using = Classification_form()
     if form_using.validate_on_submit():
@@ -190,7 +190,7 @@ def add_new_classification():
     return render_template('admin/add_or_edit_cla.html', form=form_using)
 
 @path_admin.route('class/edit/<int:cla_id>', methods=['GET','POST'])
-@login_request_update
+@admin_request
 def edit_classification(cla_id):
     classification_using = Classification.query.get(cla_id)
     form_using = Classification_form(name=classification_using.cla_name)
@@ -203,7 +203,7 @@ def edit_classification(cla_id):
     return render_template('admin/add_or_edit_cla.html', form=form_using)
 
 @path_admin.route('class/delete/<int:cla_id>', methods=['GET','POST'])
-@login_request_update
+@admin_request
 def delete_classification(cla_id):
     classification_using=Classification.query.get(cla_id)
     if classification_using:
@@ -213,7 +213,7 @@ def delete_classification(cla_id):
         return redirect(url_for('admin.classification_manage_page'))
 
 @path_admin.route('/user')
-@login_request_update
+@admin_request
 def user_manage_page():
     page=request.args.get('page', 1, type=int)
     pagination = User.query.order_by(User.user_id).paginate(page=page, per_page=20, error_out=False)
@@ -221,7 +221,7 @@ def user_manage_page():
     return render_template('admin/user.html', users=users_showing, pagination=pagination)
 
 @path_admin.route('/user/add', methods=['GET','POST'])
-@login_request_update
+@admin_request
 def add_new_user():
     form_using = User_form()
 
@@ -244,7 +244,7 @@ def add_new_user():
     return render_template('admin/add_or_edit_user.html', form=form_using, key="create")
 
 @path_admin.route('/user/edit/<int:user_id>', methods=['GET','POST'])
-@login_request_update
+@admin_request
 def edit_user(user_id):
     user_using = User.query.get(user_id)
     print("h1")
@@ -286,7 +286,7 @@ def edit_user(user_id):
     return render_template('admin/add_or_edit_user.html', form=form_using, user=user_using, key="edit")
 
 @path_admin.route('/user/delete/<int:user_id>', methods=['GET','POST'])
-@login_request_update
+@admin_request
 def delete_user(user_id):
     user_using = User.query.get(user_id)
     if user_using:

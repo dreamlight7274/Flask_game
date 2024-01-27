@@ -64,6 +64,7 @@
 {#                          </li>#}
 {#                        </ul>#}
 {#                    </nav>#}
+    {% block pagination %}
     <nav class="pagination is-small" role="navigation" aria-label="pagination">
     {% if pagination.has_prev %}
     <a href="/?page={{ pagination.prev_num }}" class="pagination-previous" title="This is the first page">Previous</a>
@@ -92,4 +93,5 @@
     </ul>
 </nav>
                 </div>
+    {% endblock pagination %}
                 {% endblock main %}

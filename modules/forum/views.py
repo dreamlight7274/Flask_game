@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, request
 from .models import Article, Category
 from ..auth.models import User
-
+from ..auth.views.auth import login_request_update
 # print(__name__)
 path_forum = Blueprint('forum', __name__, url_prefix='/forum', template_folder='templates', static_folder='static')
 # name: views
@@ -17,13 +17,18 @@ def index():
 #     return render_template('index.html')
     # return 'Hello World!'
 
+@path_forum.route('/personal')
+@login_request_update
+def personal_index():
+    return render_template('forum/personal_page.html')
+
 @path_forum.route('/category/<int:cat_id>')
 def articles_with_category(cat_id):
 
 
     category_using = Category.query.get(cat_id)
     page = request.args.get('page', default=1, type=int)
-    pagination = Article.query.filter(Article.category_id == cat_id).paginate(page=page, per_page=5, error_out=False)
+    pagination = Article.query.filter(Article.category_id == cat_id).paginate(page=page, per_page=2, error_out=False)
     articles_showing = pagination.items
     return render_template('forum/articles_with_cat.html', articles=articles_showing, category=category_using, pagination=pagination)
 
@@ -43,7 +48,7 @@ def search():
     page = request.args.get('page', 1, type=int)
     pagination = Article.query.filter(Article.article_name.like("%"+words+"%")).paginate(page=page, per_page=2, error_out=False)
     articles_using = pagination.items
-    return render_template('index.html', words=words, articles=articles_using, pagination=pagination)
+    return render_template('forum/index_with_search.html', words=words, articles=articles_using, pagination=pagination)
 
 
 

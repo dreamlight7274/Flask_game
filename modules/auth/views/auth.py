@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, flash, redirect, url_for, session, g
+from flask import Blueprint, render_template, request, flash, redirect, url_for, session, g, abort
 from ..models import User
 from werkzeug.security import check_password_hash, generate_password_hash
 from Project_public import db
@@ -12,11 +12,17 @@ path_auth = Blueprint('auth', __name__, url_prefix='/auth',
 @path_auth.before_app_request
 def user_log_in_status():
     user_id = session.get('user_id')
+
+    # urls_admin = ['/admin/']
     if user_id is None:
         g.user = None
     else:
         g.user = User.query.get(int(user_id))
 # g, a global object, it can be used everywhere
+        if g.user.is_admin:
+            g.user.perm = 2
+        elif not g.user.is_admin:
+            g.user.perm = 1
 
 def login_required(view):
     @functools.wraps(view)
@@ -33,10 +39,37 @@ def login_request_update(view):
         if g.user is None:
             redirect_direction = f"{url_for('auth.login')}?redirect_direction={request.path}"
             return redirect(redirect_direction)
+
         return view(**kwargs)
     return warpped_view
 # if you are not login, go to login page, and if you follow the login in path, it will lead you to the page you want to
 # go to
+
+def admin_request(view):
+    @functools.wraps(view)
+    def warpped_view(**kwargs):
+        if g.user is None:
+            redirect_direction = f"{url_for('auth.login')}?redirect_direction={request.path}"
+            return redirect(redirect_direction)
+        if g.user.perm != 2:
+            abort(403, "You don't have privileges to access this page")
+
+        return view(**kwargs)
+
+    return warpped_view
+
+def owner_request(view):
+    @functools.wraps(view)
+    def warpped_view(**kwargs):
+        if g.user is None:
+            redirect_direction = f"{url_for('auth.login')}?redirect_direction={request.path}"
+            return redirect(redirect_direction)
+        if g.user.user_id != request.args.get('user_id'):
+            abort(403, "You don't have privileges to access this page")
+
+        return view(**kwargs)
+
+    return warpped_view
 @path_auth.route('/login', methods=['GET', 'POST']) # method support
 def login():
     # if request.method == 'POST':

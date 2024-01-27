@@ -28,9 +28,13 @@
             <b-navbar-item href="/">
                 Home
             </b-navbar-item>
-            <b-navbar-item href="#">
-                Documentation
+        {% if g.user %}
+        {% if g.user.perm == 2 %}
+            <b-navbar-item href="{{ url_for('admin.index') }}">
+                Admin terminal
             </b-navbar-item>
+        {% endif %}
+        {% endif %}
             {% if '/forum/category' in request.path%}
             <b-navbar-dropdown label="{{ category.category_name }}">
             {% else %}
@@ -59,8 +63,12 @@
 {#                {% if user_id %}#}
                 <div class=" buttons">
 
+
                     <a class="button is-primary is-light">Welcome {{ g.user['user_name'] }}</a>
-                    <a class="button is-success">Individual center</a>
+
+                    <a class="button is-success" href="{{ url_for('forum.personal_index') }}">Individual center</a>
+
+
 
                     <a class="button is-danger" href="{{ url_for('auth.logout') }}">Logout</a>
                 </div>
