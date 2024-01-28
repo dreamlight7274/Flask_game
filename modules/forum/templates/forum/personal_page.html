@@ -1,1 +1,88 @@
 {% extends 'admin/index.html' %}
+{% block title %}
+{{ g.user['user_name'] }}-Personal center
+{% endblock title %}
+{% block manage %}
+    <div class="columns">
+    <div class="column is-2">
+        <div class="card is-shadowless" style="border-right:solid 1px #eee">
+            <div class="card-content">
+                <aside class="menu">
+                    <p class="menu-label">
+                        terminal
+                    </p>
+                    <ul class="menu-list">
+                        <li><a class="{% if request.path == '/admin/' %}is-active{% endif %}"
+                            href="{{ url_for('forum.personal_index') }}">Main page</a></li>
+
+                    </ul>
+                    <p class="menu-label">
+                        ACCOUNT
+                    </p>
+                    <ul class="menu-list">
+                        <li><a href="">Basic information management</a></li>
+                        <li><a href="">change the password</a></li>
+                    </ul>
+                    <p class="menu-label">
+                        ARTICLE
+                    </p>
+                    <ul class="menu-list">
+                        <li><a href="">Article management</a></li>
+                    </ul>
+
+                </aside>
+            </div>
+        </div>
+    </div>
+    <div class="column">
+        {% block res_list %}
+        <div class="tile is-ancestor">
+            <div class="tile is-parent">
+                <article class="tile is-child notification is-success is-light">
+                    <div class="content">
+                        <p class="title">Welcome</p>
+                        <p class="subtitle">{{ g.user.user_name }}</p>
+                        <div class="content">
+                            This is Your personal page
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </div>
+                        <div class="column">
+                    <div class="columns is-mobile" style="border-bottom: #ededed solid 1px; padding-bottom: 1rem">
+                        <div class="column is-narrow">
+                            <figure class="image is-96x96">
+                                {% if g.user.head_portrait %}
+                                <img class="is-rounded" src="/admin/static/{{ g.user['head_portrait'] }}">
+                                {% else %}
+                                -_-
+                                    <p>you haven't give a head portrait</p>
+                                {% endif %}
+
+                            </figure>
+                        </div>
+                    </div>
+
+                    <div class="columns" style="border-bottom: #ededed solid 1px">
+                        <div class="column is-2">
+                            <span class=" has-text-grey-light">Username</span>
+                        </div>
+                        <div class="column is-narrow">
+                            <span class=" has-text-black-ter">{{ g.user['user_name'] }}</span>
+                        </div>
+                    </div>
+                    <div class="columns" style="border-bottom: #ededed solid 1px">
+                        <div class="column is-2">
+                            <span class=" has-text-grey-light">Add_date</span>
+                        </div>
+                        <div class="column is-narrow">
+                            <span class=" has-text-black-ter">{{ g.user['add_date'] }}</span>
+                        </div>
+
+                    </div>
+                        </div>
+        {% endblock res_list %}
+    </div>
+</div>
+{% endblock manage %}
