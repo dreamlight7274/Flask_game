@@ -12,7 +12,7 @@ class User(db.Model):
     is_VIP = db.Column(db.Boolean, nullable=True, default=False)
     is_admin = db.Column(db.Boolean, nullable=True, default=False)
     add_date = db.Column(db.DateTime, nullable=True, default=datetime.utcnow)
-    article = db.relationship('Article', backref='user', lazy=True)
+    article = db.relationship('Article', backref='user', lazy=True, cascade='all, delete-orphan, save-update')
 
     def __repr__(self):
         return '<User %r>' % self.user_name

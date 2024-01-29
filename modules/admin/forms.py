@@ -32,6 +32,10 @@ class Article_form(FlaskForm):
     content = TextAreaField('content', validators=[
         DataRequired(message="Please input the content of article")
     ])
+    thumbnail = FileField("thumbnail", validators=[
+        file_allowed(['jpg','jpeg','png'], message="only jpg/jpeg/png file are available"),
+        file_size(max_size=10240000, message="The size of the thumbnail should be less than 10 MB")
+    ], description="the size of the thumbnail should be less than 10 MB, and jpg/jpeg/png files are accessible ")
     classifications = SelectMultipleField('classifications', choices=None, coerce=int)
 
 class Classification_form(FlaskForm):
@@ -73,8 +77,7 @@ class User_edit_form(FlaskForm):
     portrait = FileField("portrait", validators=[
         file_allowed(['jpg','jpeg','png'], message="only jpg/jpeg/png file are available"),
         file_size(max_size=10240000, message="The size of the portrait should be less than 10 MB")
-
-
     ], description="the size of the portrait should be less than 10 MB, and jpg/jpeg/png files are accessible ")
+
     is_VIP = BooleanField("is_VIP", default=False)
     is_admin = BooleanField("is_admin", default=False)

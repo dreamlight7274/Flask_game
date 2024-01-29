@@ -4,7 +4,7 @@
 
 
 {% block table_content %}
-    <form action="" method="post" class="mt-4">
+    <form action="" method="post" class="mt-4" enctype="multipart/form-data">
         {{ form.csrf_token }}
         <div class="field">
             {{ form.name.label(class='label') }}
@@ -32,6 +32,26 @@
             {{ form.content.label(class='label') }}
             <div class="control">
                 {{ form.content(class='textarea', rows="10", placeholder='Content') }}
+            </div>
+        </div>
+        <div class="field">
+            {{ form.thumbnail.label(class='label') }}
+            <div class="control">
+                {{ form.thumbnail(class='input',  placeholder='thumbnail') }}
+                <p class="help has-text-grey-light">
+                    {{ form.thumbnail.description }}
+                </p>
+            </div>
+
+            <div class="mb-2">
+
+                        {% if key=="edit" %}
+                            {% if article.thumbnail %}
+                <img height="100" width="100" src="/admin/static/{{ article.thumbnail }}" alt="{{ article.thumbnail }}">
+                            {% else %}
+                                -_-
+                            {% endif %}
+                        {% endif %}
             </div>
         </div>
 

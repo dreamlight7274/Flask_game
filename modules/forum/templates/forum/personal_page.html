@@ -12,7 +12,7 @@
                         terminal
                     </p>
                     <ul class="menu-list">
-                        <li><a class="{% if request.path == '/admin/' %}is-active{% endif %}"
+                        <li><a class="{% if request.path == '/forum/' %}is-active{% endif %}"
                             href="{{ url_for('forum.personal_index') }}">Main page</a></li>
 
                     </ul>
@@ -20,7 +20,7 @@
                         ACCOUNT
                     </p>
                     <ul class="menu-list">
-                        <li><a href="">Basic information management</a></li>
+                        <li><a href="{{ url_for('forum.personal_info_update', user_id=g.user.user_id) }}">Basic information management</a></li>
                         <li><a href="">change the password</a></li>
                     </ul>
                     <p class="menu-label">
@@ -36,6 +36,18 @@
     </div>
     <div class="column">
         {% block res_list %}
+
+    {% with messages = get_flashed_messages() %}
+        <b-message type="is-success">
+          {% if messages %}
+              <ul class=flashes>
+                {% for message in messages %}
+                    <li>{{ message }}</li>
+                {% endfor %}
+              </ul>
+          {% endif %}
+        </b-message>
+    {% endwith %}
         <div class="tile is-ancestor">
             <div class="tile is-parent">
                 <article class="tile is-child notification is-success is-light">

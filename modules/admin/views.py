@@ -105,7 +105,9 @@ def add_new_article():
     form_using.category.choices = [(category.category_id, category.category_name) for category in Category.query.all()]
     form_using.classifications.choices = [(cla.cla_id, cla.cla_name) for cla in Classification.query.all()]
 
+
     if form_using.validate_on_submit():
+        file = form_using.thumbnail.data
         article_creating = Article(
             article_name=form_using.name.data,
             excerpt=form_using.excerpt.data,
@@ -116,12 +118,18 @@ def add_new_article():
 
 
         )
+        if file == None:
+            article_creating.thumbnail = None
+        else:
+            thumbnail_path, thumbnail_name = upload_file('thumbnail', file)
+            file.save(thumbnail_path)
+            article_creating.thumbnail = f'thumbnail/{thumbnail_name}'
         article_creating.classifications = [Classification.query.get(cla_id) for cla_id in form_using.classifications.data]
         db.session.add(article_creating)
         db.session.commit()
         flash(f'Article {form_using.name.data} has been created')
         return redirect(url_for('admin.article_manage_page'))
-    return render_template('admin/add_or_edit_article.html',form= form_using)
+    return render_template('admin/add_or_edit_article.html',form= form_using, key="create")
 
 @path_admin.route('/article/edit/<int:article_id>', methods=['GET','POST'])
 @admin_request
@@ -134,6 +142,7 @@ def edit_article(article_id):
         status=article_using.article_status,
         category=article_using.category.category_id,
         content=article_using.content,
+        thumbnail=article_using.thumbnail,
         classifications=classifications_using,
         user_id=g.user.user_id,
 
@@ -148,6 +157,13 @@ def edit_article(article_id):
         article_using.article_status = form_using.status.data
         article_using.category_id = int(form_using.category.data)
         article_using.content = form_using.content.data
+        file_update = form_using.thumbnail.data
+        if article_using.thumbnail == file_update:
+            article_using.thumbnail = article_using.thumbnail
+        else:
+            thumbnail_path, thumbnail_name = upload_file('thumbnail', file_update)
+            file_update.save(thumbnail_path)
+            article_using.thumbnail = f'thumbnail/{thumbnail_name}'
         article_using.user_id = g.user.user_id
         article_using.classifications = [Classification.query.get(cla_id) for cla_id in form_using.classifications.data]
         db.session.add(article_using)
@@ -156,7 +172,7 @@ def edit_article(article_id):
         return redirect(url_for('admin.article_manage_page'))
 
 
-    return render_template('admin/add_or_edit_article.html', form=form_using)
+    return render_template('admin/add_or_edit_article.html', form=form_using, article=article_using, key="edit")
 
 @path_admin.route('/article/delete/<int:article_id>', methods=['GET','POST'])
 @admin_request
@@ -227,15 +243,16 @@ def add_new_user():
 
     if form_using.validate_on_submit():
         file = form_using.portrait.data
-        portrait_path, portrait_name = upload_file('portrait', file)
-        file.save(portrait_path)
         user_creating = User(
             user_name=form_using.username.data,
             password=generate_password_hash(form_using.password.data),
-            head_portrait=f'portrait/{portrait_name}',
             is_VIP=form_using.is_VIP.data,
             is_admin=form_using.is_admin.data
         )
+        if file is not None:
+            portrait_path, portrait_name = upload_file('portrait', file)
+            file.save(portrait_path)
+            user_creating.head_portrait=f'portrait/{portrait_name}'
         db.session.add(user_creating)
         db.session.commit()
         flash(f'User {form_using.username.data} has been created')

@@ -11,6 +11,7 @@ path_auth = Blueprint('auth', __name__, url_prefix='/auth',
 # before the request of url
 @path_auth.before_app_request
 def user_log_in_status():
+
     user_id = session.get('user_id')
 
     # urls_admin = ['/admin/']

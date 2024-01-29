@@ -30,22 +30,22 @@
                 </p>
             </div>
 
-<div class="mb-2">
-{#            {% if form.portrait %}#}
-{#                <img height="100" width="100" src="/admin/static/{{ form.portrait.data }}" alt="portrait">#}
-{#                #}
-{#            {% else %}#}
-{#                    -_-#}
-{#            {% endif %}#}
+            <div class="mb-2">
+            {#            {% if form.portrait %}#}
+            {#                <img height="100" width="100" src="/admin/static/{{ form.portrait.data }}" alt="portrait">#}
+            {#                #}
+            {#            {% else %}#}
+            {#                    -_-#}
+            {#            {% endif %}#}
 
-            {% if key=="edit" %}
-                {% if user.head_portrait %}
-<img height="100" width="100" src="/admin/static/{{ user.head_portrait }}" alt="{{ user.user_name }}">
-                {% else %}
-                    -_-
-                {% endif %}
-            {% endif %}
-</div>
+                        {% if key=="edit" %}
+                            {% if user.head_portrait %}
+                <img height="100" width="100" src="/admin/static/{{ user.head_portrait }}" alt="{{ user.user_name }}">
+                            {% else %}
+                                -_-
+                            {% endif %}
+                        {% endif %}
+            </div>
         </div>
 
         <div class="field">

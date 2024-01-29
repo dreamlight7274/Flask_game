@@ -20,7 +20,7 @@ class Category(db.Model):  # if want to use parent: Category(parent)
     category_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     category_name = db.Column(db.String(60), nullable=False)
     category_slug = db.Column(db.String(60), nullable=False)
-    article = db.relationship('Article', backref='category', lazy=True)
+    article = db.relationship('Article', backref='category', lazy=True, cascade='all, delete-orphan, save-update')
     # Article: relationship with article.
     # backref: from article, we can get the information of the category
     # lazy: when the article are accessed,
@@ -50,6 +50,7 @@ class Article(db.Model):
     article_status = db.Column(db.Enum(ArticleStatus), server_default='online', nullable=False)
     public_date = db.Column(db.DateTime, default=datetime.utcnow(), nullable=False)
     update_date = db.Column(db.DateTime, default=datetime.utcnow(), onupdate=datetime.utcnow(), nullable=True)
+    thumbnail = db.Column(db.String(200), nullable=True)
     category_id = db.Column(db.Integer, db.ForeignKey('category.category_id'), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.user_id'), nullable=False)
     # user

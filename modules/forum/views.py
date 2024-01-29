@@ -1,7 +1,10 @@
-from flask import Blueprint, render_template, request
+from flask import Blueprint, render_template, request, flash, redirect, url_for, g
 from .models import Article, Category
 from ..auth.models import User
 from ..auth.views.auth import login_request_update
+from ..forum.forms import Personal_info_edit_form
+from ..admin.utils import upload_file
+from Project_public import db
 # print(__name__)
 path_forum = Blueprint('forum', __name__, url_prefix='/forum', template_folder='templates', static_folder='static')
 # name: views
@@ -21,6 +24,32 @@ def index():
 @login_request_update
 def personal_index():
     return render_template('forum/personal_page.html')
+
+@path_forum.route('/personal/edit/info/<int:user_id>', methods=['GET','POST'])
+@login_request_update
+def personal_info_update(user_id):
+    user_using = User.query.get(user_id)
+    form_using = Personal_info_edit_form(
+        username=user_using.user_name,
+        portrait=user_using.head_portrait,
+    )
+    if form_using.validate_on_submit():
+        user_using.user_name = form_using.username.data
+        file_update = form_using.portrait.data
+        if user_using.head_portrait == file_update:
+            user_using.head_portrait = user_using.head_portrait
+        else:
+            print("pass change")
+            portrait_path, portrait_name = upload_file('portrait', file_update)
+            file_update.save(portrait_path)
+            user_using.head_portrait = f'portrait/{portrait_name}'
+        db.session.add(user_using)
+        db.session.commit()
+        flash(f'basic information of your account {form_using.username.data} has been changed')
+        return redirect(url_for('forum.personal_index'))
+    return render_template('forum/edit_personal_information.html', form=form_using, user=user_using, key="edit")
+
+
 
 @path_forum.route('/category/<int:cat_id>')
 def articles_with_category(cat_id):
@@ -49,6 +78,7 @@ def search():
     pagination = Article.query.filter(Article.article_name.like("%"+words+"%")).paginate(page=page, per_page=2, error_out=False)
     articles_using = pagination.items
     return render_template('forum/index_with_search.html', words=words, articles=articles_using, pagination=pagination)
+
 
 
 

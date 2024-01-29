@@ -1,0 +1,41 @@
+{% extends 'forum/personal_page.html' %}
+{% block res_list %}
+    <form action="" method="post" class="mt-4" enctype="multipart/form-data">
+        {{ form.csrf_token }}
+        <div class="field">
+            {{ form.username.label(class='label') }}
+            <div class="control">
+                {{ form.username(class='input', placeholder='username') }}
+            </div>
+        </div>
+        <div class="field">
+            {{ form.portrait.label(class='label') }}
+            <div class="control">
+                {{ form.portrait(class='input',  placeholder='head_portrait') }}
+                <p class="help has-text-grey-light">
+                    {{ form.portrait.description }}
+                </p>
+            </div>
+
+<div class="mb-2">
+
+            {% if key=="edit" %}
+                {% if user.head_portrait %}
+<img height="100" width="100" src="/admin/static/{{ user.head_portrait }}" alt="{{ user.user_name }}">
+                {% else %}
+                    -_-
+                {% endif %}
+            {% endif %}
+</div>
+        </div>
+
+        <div class="is-block">
+            <div class="box has-background-light is-shadowless level">
+                <div class="level-right">
+                    <a href="{{ url_for('forum.personal_info_update', user_id=user.user_id) }}" class="button is-primary is-light mr-2">back</a>
+                    <input type="submit" value="save" class=" button is-success">
+                </div>
+            </div>
+        </div>
+    </form>
+{% endblock res_list%}
