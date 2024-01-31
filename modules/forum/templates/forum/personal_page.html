@@ -21,13 +21,13 @@
                     </p>
                     <ul class="menu-list">
                         <li><a href="{{ url_for('forum.personal_info_update', user_id=g.user.user_id) }}">Basic information management</a></li>
-                        <li><a href="">change the password</a></li>
+                        <li><a href="{{ url_for('forum.personal_change_password') }}">change the password</a></li>
                     </ul>
                     <p class="menu-label">
                         ARTICLE
                     </p>
                     <ul class="menu-list">
-                        <li><a href="">Article management</a></li>
+                        <li><a href="{{ url_for('forum.personal_article_manage_page') }}">Article management</a></li>
                     </ul>
 
                 </aside>
@@ -35,9 +35,8 @@
         </div>
     </div>
     <div class="column">
-        {% block res_list %}
-
-    {% with messages = get_flashed_messages() %}
+ {% block flash_message %}
+             {% with messages = get_flashed_messages() %}
         <b-message type="is-success">
           {% if messages %}
               <ul class=flashes>
@@ -48,6 +47,10 @@
           {% endif %}
         </b-message>
     {% endwith %}
+ {% endblock %}
+        {% block res_list %}
+
+
         <div class="tile is-ancestor">
             <div class="tile is-parent">
                 <article class="tile is-child notification is-success is-light">

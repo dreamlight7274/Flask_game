@@ -1,0 +1,92 @@
+{% extends 'forum/personal_articles.html' %}
+
+{% block button %}{% endblock button %}
+
+
+{% block table_content %}
+    <form action="" method="post" class="mt-4" enctype="multipart/form-data">
+        {{ form.csrf_token }}
+        <div class="field">
+            {{ form.name.label(class='label') }}
+            <div class="control">
+                {{ form.name(class='input', placeholder='name') }}
+            </div>
+        </div>
+        <div class="field">
+            {{ form.excerpt.label(class='label') }}
+            <div class="control">
+                {{ form.excerpt(class='input', placeholder='excerpt') }}
+            </div>
+        </div>
+
+        <div class="field">
+            {{ form.category.label(class='label') }}
+            <div class="control">
+                <div class="select is-fullwidth">
+                    {{ form.category }}
+                </div>
+            </div>
+        </div>
+
+        <div class="field">
+            {{ form.content.label(class='label') }}
+            <div class="control">
+                {{ form.content(class='textarea', rows="10", placeholder='Content') }}
+            </div>
+        </div>
+        <div class="field">
+            {{ form.thumbnail.label(class='label') }}
+            <div class="control">
+                {{ form.thumbnail(class='input',  placeholder='thumbnail') }}
+                <p class="help has-text-grey-light">
+                    {{ form.thumbnail.description }}
+                </p>
+            </div>
+
+            <div class="mb-2">
+
+                        {% if key=="edit" %}
+                            {% if article.thumbnail %}
+                <img height="100" width="100" src="/admin/static/{{ article.thumbnail }}" alt="{{ article.thumbnail }}">
+                            {% else %}
+                                -_-
+                            {% endif %}
+                        {% endif %}
+            </div>
+        </div>
+
+        <div class="field">
+            {{ form.classifications.label(class='label') }}
+            <div class="control">
+                <div class="select is-fullwidth is-multiple">
+                    {{ form.classifications(size='5') }}
+                </div>
+            </div>
+        </div>
+
+        <div class="field is-horizontal">
+            {{ form.status.label(class='label') }}
+            <div class="field-body ml-4">
+                <div class="control">
+                    <label class="radio">
+                        <input type="radio" name="status" value="draft">
+                        draft
+                    </label>
+                    <label class="radio">
+                        <input checked type="radio" name="status" value="online">
+                        online
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div class="is-block">
+            <div class="box has-background-light is-shadowless level">
+                <div class="level-right">
+                    <a href="{{ url_for('forum.personal_article_manage_page') }}" class="button is-primary is-light mr-2">Back</a>
+                    <input type="submit" value="save" class=" button is-success">
+                </div>
+            </div>
+        </div>
+
+    </form>
+{% endblock table_content %}    
