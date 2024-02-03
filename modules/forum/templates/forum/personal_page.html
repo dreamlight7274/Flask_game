@@ -35,8 +35,8 @@
         </div>
     </div>
     <div class="column">
- {% block flash_message %}
-             {% with messages = get_flashed_messages() %}
+{% block flash_message %}
+    {% with messages = get_flashed_messages() %}
         <b-message type="is-success">
           {% if messages %}
               <ul class=flashes>
@@ -47,7 +47,7 @@
           {% endif %}
         </b-message>
     {% endwith %}
- {% endblock %}
+{% endblock %}
         {% block res_list %}
 
 

@@ -1,9 +1,9 @@
 from flask import Blueprint, render_template, request, flash, redirect, url_for, g
 from werkzeug.security import generate_password_hash
-from .models import Article, Category, Classification
+from .models import Article, Category, Classification, Comment
 from ..auth.models import User
 from ..auth.views.auth import login_request_update
-from ..forum.forms import Personal_info_edit_form, Change_password_form, Article_form_user
+from ..forum.forms import Personal_info_edit_form, Change_password_form, Article_form_user, Comment_form_user
 from ..admin.utils import upload_file
 from Project_public import db
 # print(__name__)
@@ -177,13 +177,35 @@ def articles_with_category(cat_id):
 
 @path_forum.route('/article/<int:cat_id>/<int:article_id>')
 def article_detail(cat_id, article_id):
+    form_using = Comment_form_user()
     article_using = Article.query.get(article_id)
     category_using = Category.query.get(cat_id)
     user_using = User.query.get(article_using.user_id)
+    comments_using = Comment.query.filter(Comment.article_id==article_id)
     previous_one = Article.query.filter(Article.article_id < article_id).order_by(-Article.article_id).first()
     next_one = Article.query.filter(Article.article_id > article_id).order_by(Article.article_id).first()
+
     return render_template('forum/article_detail.html', category=category_using, article=article_using, user=user_using,
-                           previous_one=previous_one, next_one=next_one)
+                           previous_one=previous_one, next_one=next_one, form=form_using, comments=comments_using)
+@path_forum.route('/comment/<int:user_id>/<int:article_id>', methods=['GET','POST'])
+@login_request_update
+def user_send_comment(user_id, article_id):
+    form_using = Comment_form_user()
+    article_using = Article.query.get(article_id)
+
+    if form_using.validate_on_submit():
+        comment_creating = Comment(
+            content = form_using.content.data
+        )
+        comment_creating.user_id = user_id
+        comment_creating.article_id = article_id
+        db.session.add(comment_creating)
+        db.session.commit()
+        flash(f'Comment has been created')
+        return redirect(url_for('forum.article_detail',
+                                cat_id=article_using.category_id, article_id=article_id))
+
+
 
 @path_forum.route('/search')
 def search():

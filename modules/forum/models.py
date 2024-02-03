@@ -53,6 +53,7 @@ class Article(db.Model):
     thumbnail = db.Column(db.String(200), nullable=True)
     category_id = db.Column(db.Integer, db.ForeignKey('category.category_id'), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.user_id'), nullable=False)
+    comment = db.relationship('Comment', backref='article', lazy=True, cascade='all, delete-orphan, save-update')
     # user
 
     # foreign key from Category
@@ -72,7 +73,12 @@ class Classification(db.Model):
     def __repr__(self):
         return '<database_classification %r>' % self.cla_name
 
-
+class Comment(db.Model):
+    comment_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    public_date = db.Column(db.DateTime, default=datetime.utcnow(), nullable=False)
+    content = db.Column(LONGTEXT, nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.user_id'), nullable=False)
+    article_id = db.Column(db.Integer, db.ForeignKey('article.article_id'), nullable=False)
 
 # flask db init
 # flask db migrate

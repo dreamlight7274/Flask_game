@@ -13,7 +13,17 @@
         </ul>
     </nav>
 {% endblock breadcrumb %}
-
+{% with messages = get_flashed_messages() %}
+    <b-message type="is-success">
+        {% if messages %}
+            <ul class=flashes>
+                {% for message in messages %}
+                    <li>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </b-message>
+{% endwith %}
 {% block article_detail %}
 <div class="pl-2">
     <h1 class="is-size-3">
@@ -25,10 +35,88 @@
         <span class="icon"><i class="mdi mdi-account"></i></span>{{ user.user_name }}
         <span class="icon"><i class="mdi mdi-tag-heart-outline"></i></span>{{ article.classifications|join(',') }}
     </p>
+    <div class="is-clearfix"></div>
+    <div class=" dropdown-divider"></div>
+    <div class="is-block has-background-light">
+        <div class="columns">
+            <div class="column is-three-fifths">
+                <figure class="image is-4by3">
+                    <img src="/admin/static/{{ article.thumbnail }}" alt="Article Thumbnail">
+                </figure>
+            </div>
+            <div class="column is-flex-direction-column">
+                <div class="is-flex is-justify-content-center">
+                    <figure class="image ">
+                        {% if user.head_portrait == None  %}
+                            <img src="/admin/static/default/default_portrait.jpg" alt="User Head Portrait" style="width: 64px; height: 64px;">
+                        {% else %}
+                            <img src="/admin/static/{{ user.head_portrait }}" alt="User Head Portrait" style="width: 64px; height: 64px;">
+                        {% endif %}
+                    </figure>
+
+                </div>
+                <div class="is-clearfix"></div>
+                <div class=" dropdown-divider"></div>
+                <div class="is-flex is-justify-content-center">
+                    <p class="is-size-4 has-text-black has-text-weight-bold">{{ user.user_name }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="content has-text-grey mt-1">{{ article.content|safe }}</div>
 </div>
 
-<hr>
+
+
+
 
 {% endblock article_detail %}
+<hr>
+<div class="is-block">
+    <div class="is-pulled-left">
+        <h1 class="is-size-4">
+            <span class="icon">
+                <i class="mdi mdi-comment-account-outline"></i>
+            </span>
+            Comments
+        </h1>
+    </div>
+    <hr>
+    {% if g.user != None %}
+        <form action="{{ url_for('forum.user_send_comment', user_id=g.user.user_id, article_id=article.article_id) }}" method="post" class="mt-4" enctype="multipart/form-data">
+            {{ form.csrf_token }}
+            <div class="field">
+{#                {{ form.content.label(class='label') }}#}
+                <div class="control">
+                    {{ form.content(class='textarea', rows="10", placeholder='Content') }}
+                </div>
+            </div>
+            <div class="is-block">
+                <div class="box has-background-light is-shadowless level">
+                    <div class="level-right">
+                        <input type="submit" value="save" class=" button is-success">
+                    </div>
+                </div>
+            </div>
+        </form>
+    {% endif %}
+</div>
+<hr>
+    {% for comment in comments %}
+            <article class="notification is-info is-light is-clearfix">
+                <div class="content">
+                    <figure class="image is-pulled-left">
+                        {% if comment.user.head_portrait == None  %}
+                            <img src="/admin/static/default/default_portrait.jpg" alt="User Head Portrait" style="width: 64px; height: 64px;">
+                        {% else %}
+                            <img src="/admin/static/{{ comment.user.head_portrait }}" alt="User Head Portrait" style="width: 64px; height: 64px;">
+                        {% endif %}
+                    </figure>
+                    <p class="subtitle">{{ comment.user.user_name }}</p>
+                    <div class="content">
+                        {{ comment.content }}
+                    </div>
+                </div>
+            </article>
+    {% endfor %}
 {% endblock main %}

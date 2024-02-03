@@ -47,3 +47,8 @@ class Article_form_user(FlaskForm):
         file_size(max_size=10240000, message="The size of the thumbnail should be less than 10 MB")
     ], description="the size of the thumbnail should be less than 10 MB, and jpg/jpeg/png files are accessible ")
     classifications = SelectMultipleField('classifications', choices=None, coerce=int)
+
+class Comment_form_user(FlaskForm):
+    content = TextAreaField('content', validators=[
+        DataRequired(message="Please input the content of comment")
+    ])
