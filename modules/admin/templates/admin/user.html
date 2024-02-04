@@ -5,7 +5,7 @@
     <div class=" is-pulled-left">
         <h1 class=" is-size-4">
             <span class="icon">
-                <i class="mdi mdi-tag-outline"></i>
+                <i class="mdi mdi-account-outline"></i>
             </span>
             User management
         </h1>
@@ -57,7 +57,7 @@
                 <td>
                     {% if user.head_portrait %}
                     <figure class="image is-48x48">
-                        <img class="is-rounded" src="/admin/static/{{ user.head_portrait }}" alt="{{ user.user_name }}">
+                        <img class="is-rounded" src="/admin/static/{{ user.head_portrait }}" alt="{{ user.user_name }}" style="width: 48px; height: 48px">
                     </figure>
                     {% else %}
                     -_-

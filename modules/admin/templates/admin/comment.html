@@ -1,0 +1,96 @@
+{% extends 'admin/index.html' %}    
+
+{% block res_list %}
+<div class="is-block">
+    <div class=" is-pulled-left">
+        <h1 class=" is-size-4">
+            <span class="icon">
+                <i class="mdi mdi-tag-outline"></i>
+            </span>
+            Comment management
+        </h1>
+    </div>
+
+    {% block button %}
+    {% endblock button %}
+    <div class="is-clearfix"></div>
+    <div class=" dropdown-divider"></div>
+
+
+    {% with messages = get_flashed_messages() %}
+    <b-message type="is-success">
+      {% if messages %}
+      <ul class=flashes>
+        {% for message in messages %}
+        <li>{{ message }}</li>
+        {% endfor %}
+      </ul>
+      {% endif %}
+    </b-message>
+    {% endwith %}
+</div>
+
+{% block table_content %}
+<div class="table-container">
+    <table class="table is-fullwidth is-hoverable is-striped">
+        <thead>
+            <tr>
+              <th>ID</th>
+              <th>public_date</th>
+              <th>content</th>
+              <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+
+            {% for comment in comments %}
+            <tr>
+                <td>{{ comment.comment_id }}</td>
+                <td>{{ comment.public_date }}</td>
+                <td>{{ comment.content }}</td>
+                <td>
+                    <div class="tags">
+                        <a href="{{ url_for('admin.delete_comment', comment_id = comment.comment_id) }}" class="tag is-danger is-light">
+                            <span class="icon">
+                                <i class="mdi mdi-trash-can-outline"></i>
+                            </span>
+                            Delete
+                        </a>
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<nav class="pagination is-small" role="navigation" aria-label="pagination">
+    {% if pagination.has_prev %}
+    <a href="{{ url_for('admin.comment_manage_page') }}?page={{ pagination.prev_num }}" class="pagination-previous" title="This is the first page">Previous</a>
+    {% endif %}
+    {% if pagination.has_next %}
+    <a href="{{ url_for('admin.comment_manage_page') }}?page={{ pagination.next_num }}" class="pagination-next">Next page</a>
+    {% endif %}
+
+    <ul class="pagination-list">        
+        {% for page in pagination.iter_pages() %}
+            {% if page %} 
+                {% if page != pagination.page %}
+                <li>
+                    <a href="{{ url_for('admin.comment_manage_page') }}?page={{ page }}" class="pagination-link" aria-label="Page 1" aria-current="page">{{ page }}</a>
+                </li>
+                {% else %}
+                <li>
+                    <a class="pagination-link is-current" aria-label="Page 1" aria-current="page">{{ page }}</a>
+                </li>
+                {% endif %}
+            {% else %}
+                <span class=pagination-ellipsis>&hellip;</span>
+            {% endif %}
+        {% endfor %}
+
+    </ul>
+</nav>
+
+{% endblock table_content %}
+{% endblock res_list %}

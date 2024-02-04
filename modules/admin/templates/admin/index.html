@@ -24,28 +24,33 @@
                         CATEGORY
                     </p>
                     <ul class="menu-list">
-                        <li><a href="{{ url_for('admin.category_manage_page') }}">Category management</a></li>
+                        <li><a href="{{ url_for('admin.category_manage_page') }}" class="{% if '/admin/category' in request.path %}is-active{% endif %}">Category management</a></li>
                     </ul>
                     <p class="menu-label">
                         ARTICLE
                     </p>
                     <ul class="menu-list">
-                        <li><a href="{{ url_for('admin.article_manage_page') }}">Article management</a></li>
+                        <li><a href="{{ url_for('admin.article_manage_page') }}" class="{% if '/admin/article' in request.path %}is-active{% endif %}">Article management</a></li>
                     </ul>
                     <p class="menu-label">
                         Classification
                     </p>
                     <ul class="menu-list">
-                        <li><a href="{{ url_for('admin.classification_manage_page') }}">Classification management</a></li>
+                        <li><a href="{{ url_for('admin.classification_manage_page') }}" class="{% if '/admin/class' in request.path %}is-active{% endif %}" >Classification management</a></li>
                     </ul>
                     <p class="menu-label">
-                        User management
+                        User
                     </p>
                     <ul class="menu-list">
-                        <li><a href="{{ url_for('admin.user_manage_page') }}">User management</a></li>
-
-                        <li><a>change the password</a></li>
+                        <li><a href="{{ url_for('admin.user_manage_page') }}" class="{% if '/admin/user' in request.path %}is-active{% endif %}">User management</a></li>
                     </ul>
+                    <p class="menu-label">
+                        Comment
+                    </p>
+                    <ul class="menu-list">
+                        <li><a href="{{ url_for('admin.comment_manage_page') }}" class="{% if '/admin/comment' in request.path %}is-active{% endif %}">Comment management</a></li>
+                    </ul>
+
                 </aside>
             </div>
         </div>

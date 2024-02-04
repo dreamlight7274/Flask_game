@@ -3,7 +3,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from .utils import upload_file
 from ..auth.views.auth import admin_request
 from ..forum.models import Category
-from ..forum.models import Article, Classification
+from ..forum.models import Article, Classification, Comment
 from ..auth.models import User
 from ..admin.forms import Category_form, Article_form, Classification_form, User_form, User_edit_form
 
@@ -311,6 +311,23 @@ def delete_user(user_id):
         db.session.commit()
         flash(f'User {user_using.user_name} has been deleted')
         return redirect(url_for('admin.user_manage_page'))
+
+@path_admin.route('/comment')
+@admin_request
+def comment_manage_page():
+    page = request.args.get('page', 1, type=int)
+    pagination = Comment.query.order_by(Comment.comment_id).paginate(page=page, per_page=3, error_out=False)
+    comments_showing = pagination.items
+    return render_template('admin/comment.html', comments=comments_showing, pagination=pagination)
+@path_admin.route('/comment/delete/<int:comment_id>', methods=['GET','POST'])
+@admin_request
+def delete_comment(comment_id):
+    comment_using = Comment.query.get(comment_id)
+    if comment_using:
+        db.session.delete(comment_using)
+        db.session.commit()
+        flash(f'Comment has been deleted')
+        return redirect(url_for('admin.comment_manage_page'))
 
 @path_admin.context_processor
 def dates_classification():

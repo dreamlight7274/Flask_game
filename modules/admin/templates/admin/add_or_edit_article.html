@@ -1,5 +1,11 @@
 {% extends 'admin/article.html' %}
+{% block extra_styles %}
+<link
+  href="https://cdn.jsdelivr.net/npm/quill@2.0.0-rc.0/dist/quill.snow.css"
+  rel="stylesheet"
+/>
 
+{% endblock %}
 {% block button %}{% endblock button %}
 
 
@@ -32,6 +38,9 @@
             {{ form.content.label(class='label') }}
             <div class="control">
                 {{ form.content(class='textarea', rows="10", placeholder='Content') }}
+            </div>
+            <div id="editor" style="height: 500px;">
+
             </div>
         </div>
         <div class="field">
@@ -90,4 +99,36 @@
         </div>
 
     </form>
-{% endblock table_content %}    
+{% endblock table_content %}
+{% block extra_js %}
+<script src="https://unpkg.com/axios@1.1.2/dist/axios.min.js"></script>
+{#  similar to ajax  #}
+<script src="https://cdn.jsdelivr.net/npm/quill@2.0.0-rc.0/dist/quill.js"></script>
+{% endblock %}
+{% block extra_script %}
+<script>
+
+    var quill = new Quill('#editor', {
+        debug: 'info',
+        theme: 'snow',
+        placeholder: 'Test',
+        readOnly: false,
+        formats: {}
+    });
+
+    var content = document.querySelector("textarea[name='content']");
+    {# get the content if it has #}
+    content.setAttribute('style', 'display:None')
+
+    quill.on('text-change', function (delta, OldDelta, source){
+        content.innerHTML = quill.container.firstChild.innerHTML;
+    });
+{#  check the changes  #}
+
+    quill.clipboard.dangerouslyPasteHTML(content.value)
+{#  it's can get the value, but as it's name, it's dangerous(xss)   #}
+
+
+
+</script>
+{% endblock %}
