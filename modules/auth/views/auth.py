@@ -73,6 +73,18 @@ def owner_request(view):
     return warpped_view
 @path_auth.route('/login', methods=['GET', 'POST']) # method support
 def login():
+
+    redirect_direction = request.args.get('redirect_direction')
+
+    form_login = LoginForm()
+    if form_login.validate_on_submit():
+        user = User.query.filter_by(user_name=form_login.username.data).first()
+        session.clear()
+        session['user_id'] = user.user_id
+        if redirect_direction is not None:
+            return redirect(redirect_direction)
+        # if there is such a parameter redirect_Direction, get the path and go to that page
+        return redirect('/')
     # if request.method == 'POST':
     #     print(request.form.get('username'))
     #     username = request.form.get('username')
@@ -92,17 +104,6 @@ def login():
     #         session['user_id'] = user_exist.user_id
     #         return redirect('/')
     # the approach without form
-    redirect_direction = request.args.get('redirect_direction')
-
-    form_login = LoginForm()
-    if form_login.validate_on_submit():
-        user = User.query.filter_by(user_name=form_login.username.data).first()
-        session.clear()
-        session['user_id'] = user.user_id
-        if redirect_direction is not None:
-            return redirect(redirect_direction)
-        # if there is such a parameter redirect_Direction, get the path and go to that page
-        return redirect('/')
 
 
 

@@ -107,7 +107,6 @@
 {% endblock %}
 {% block extra_script %}
 <script>
-
     var quill = new Quill('#editor', {
         debug: 'info',
         theme: 'snow',
@@ -115,20 +114,15 @@
         readOnly: false,
         formats: {}
     });
-
     var content = document.querySelector("textarea[name='content']");
     {# get the content if it has #}
-    content.setAttribute('style', 'display:None')
-
+    {#content.setAttribute('style', 'display:None')#}
     quill.on('text-change', function (delta, OldDelta, source){
         content.innerHTML = quill.container.firstChild.innerHTML;
     });
 {#  check the changes  #}
-
     quill.clipboard.dangerouslyPasteHTML(content.value)
 {#  it's can get the value, but as it's name, it's dangerous(xss)   #}
-
-
 
 </script>
 {% endblock %}
